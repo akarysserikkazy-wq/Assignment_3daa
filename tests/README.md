@@ -1,11 +1,19 @@
-# Your tests / Ваши тесты
+# Own tests
 
-Create your own JSON Lines inputs here, together with expected and actual outputs and an explanation of each test. Run a file from the repository root:
+All commands run from the repository root.
 
-```sh
-python tools/run.py --input tests/my_cases.jsonl
-```
+| Command | What it does |
+|---|---|
+| `python -m unittest discover -s tests -v` | 49 automated tests: boundaries, full limits (n=100000, m/q=250000), deep chains, repeated mixed requests, alternative valid answers, rejected invalid witnesses, route-helper calls |
+| `python tools/run.py --input tests/my_cases.jsonl` | runs the stored hand-written inputs through the launcher and prints actual results |
+| `python tests/benchmark.py` | Kruskal vs Prim benchmark, writes `tests/benchmark_results.md` |
 
-Create `my_cases.jsonl` before running this example command. The launcher prints actual results; compare them with independently justified expected answers. Your files are not discovered automatically. Call your route helper directly in your test code. See the root README for all requirements.
+## Files
 
-Создайте здесь свои входы JSON Lines, ожидаемые и фактические результаты и объяснения тестов. Команда выше запускает созданный вами файл, но не сравнивает ответы автоматически. Функцию восстановления пути вызывайте непосредственно из своего тестового кода. Полные требования приведены в README в корне репозитория.
+- `test_algorithms.py` – the tests. Expected answers are justified in comments or derived by an independent oracle (brute force, Warshall closure, Kahn, Bellman–Ford, planted structures).
+- `checkers.py` – validators for non-unique answers (forest, SCC labels and condensation, topological order, shortest-path witnesses). They do not import `algorithms.py`.
+- `my_cases.jsonl` – stored inputs, one JSON request per line.
+- `my_cases_actual.jsonl` – actual outputs of `my_cases.jsonl`, in the same order.
+- `benchmark.py`, `benchmark_results.md` – benchmark script and its latest results.
+
+The expected answer for every stored case and the explanation of each test group are in section 4 of `../ANALYSIS.md`.
